@@ -5,6 +5,12 @@ terraform {
       version = "~> 4.0"
     }
   }
+  backend "s3" {
+    bucket         = "wordpress-aws-2023"
+    key            = "backend.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "wordpress-remote-db"
+  }
 
 }
 
