@@ -5,13 +5,13 @@ terraform {
       version = "~> 4.0"
     }
   }
+
   backend "s3" {
     bucket         = "wordpress-aws-2023"
-    key            = "vpc_network.tfstate"
+    key            = "remote_backend.tfstate"
     region         = "us-east-1"
     dynamodb_table = "wordpress-remote-db"
   }
-
 }
 
 # Configure the AWS Provider
