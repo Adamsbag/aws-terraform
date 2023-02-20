@@ -11,7 +11,7 @@ secret=$(aws secretsmanager get-secret-value --secret-id "main/rds/password" --r
 username=$(echo $secret | jq -r .SecretString | jq -r .username)
 password=$(echo $secret | jq -r .SecretString | jq -r .password)
 name=$(echo $secret | jq -r .SecretString | jq -r .name)
-endpoint=$(echo $secret | jq -r .SecretString | jq -r .endpoint)
+endpoint=$(terraform output rds_endpoint)
 
 # install Apache
 sudo yum install httpd -y
