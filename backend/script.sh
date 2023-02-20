@@ -6,12 +6,12 @@ sudo yum update -y
 #Install JQ to retreive the Secret value from json format
 sudo yum install jq -y
 
-# import RDS credentials from AWS Secrets Manager
+# Import credentials from AWS Secrets Manager
 secret=$(aws secretsmanager get-secret-value --secret-id "main/rds/password" --region "us-east-1")
 username=$(echo $secret | jq -r .SecretString | jq -r .username)
 password=$(echo $secret | jq -r .SecretString | jq -r .password)
 name=$(echo $secret | jq -r .SecretString | jq -r .name)
-endpoint=$(echo $secret | jq -r .SecretString | jq -r .endpoint)
+
 
 # install Apache
 sudo yum install httpd -y
@@ -34,6 +34,21 @@ sudo systemctl start mariadb
 # enable MariaDB to start on boot
 sudo systemctl enable mariadb
 
+# Create mydb Database
+mysqladmin -u root create $name
+
+# Secure mydb database
+sudo mysql_secure_installation <<EOF
+
+Y
+$password
+$password
+Y
+Y
+Y
+Y
+EOF
+
 # download the latest version of WordPress
 curl -O https://wordpress.org/latest.tar.gz
 
@@ -53,10 +68,9 @@ cd /var/www/html
 sudo cp wp-config-sample.php wp-config.php
 
 # update the configuration with the RDS endpoint and credentials
-sed -i "s/database_name_here/$name/g" wp-config.php
-sed -i "s/username_here/$username/g" wp-config.php
-sed -i "s/password_here/$password/g" wp-config.php
-sed -i "s/localhost/$endpoint/g" wp-config.php
+sudo sed -i "s/database_name_here/$name/g" wp-config.php
+sudo sed -i "s/username_here/$username/g" wp-config.php
+sudo sed -i "s/password_here/$password/g" wp-config.php
 
 # restart Apache
 sudo systemctl restart httpd
