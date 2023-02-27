@@ -35,10 +35,10 @@ sudo systemctl start mariadb
 sudo systemctl enable mariadb
 
 # download the latest version of WordPress
-curl -O https://wordpress.org/latest.tar.gz
+sudo curl -O https://wordpress.org/latest.tar.gz
 
 # extract the downloaded file
-tar xzvf latest.tar.gz
+sudo tar xzvf latest.tar.gz
 
 # move the files to the Apache document root
 sudo mv wordpress/* /var/www/html
@@ -53,10 +53,10 @@ cd /var/www/html
 sudo cp wp-config-sample.php wp-config.php
 
 # update the configuration with the RDS endpoint and credentials
-sed -i "s/database_name_here/$name/g" wp-config.php
-sed -i "s/username_here/$username/g" wp-config.php
-sed -i "s/password_here/$password/g" wp-config.php
-sed -i "s/localhost/$endpoint/g" wp-config.php
+sudo sed -i "s/database_name_here/$name/g" wp-config.php
+sudo sed -i "s/username_here/$username/g" wp-config.php
+sudo sed -i "s/password_here/$password/g" wp-config.php
+sudo sed -i "s/localhost/$endpoint/g" wp-config.php
 
 # restart Apache
 sudo systemctl restart httpd
